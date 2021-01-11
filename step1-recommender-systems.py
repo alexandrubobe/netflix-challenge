@@ -37,12 +37,49 @@ predictions_description = pd.read_csv(predictions_file, delimiter=';', names=['u
 #####
 
 def predict_collaborative_filtering(movies, users, ratings, predictions):
-    matrix_ratings  = np.zeros((users.shape[0]+1, movies.shape[0]+1))
+   matrix_ratings  = np.zeros((users.shape[0]+1, movies.shape[0]+1))
+    
+    
     for index, row in ratings.iterrows():
         matrix_ratings[row['userID'], row['movieID']] =  row["rating"]
-    #matrix_ratings.replace(0,NaN)
-    #pd.DataFrame(matrix_ratings).to_csv("./data/matrix.csv", header=None, index =None)
-    matrix_users_similarity = np.zeros((users.shape[0]+1,users.shape[0]+1))
+    
+    
+    for i in range(1,matrix_ratings.shape[0]):
+        sum = 0
+        len = 0
+        for j in range(1, matrix_ratings.shape[1]):
+            if(matrix_ratings[i][j] != 0):
+                sum = sum + matrix_ratings[i][j]
+                len = len + 1
+        if(sum > 0):
+            mean = sum / len
+            for j in range(1, matrix_ratings.shape[1]):
+                if(matrix_ratings[i][j] != 0):
+                    matrix_ratings[i][j] = matrix_ratings[i][j] - mean    
+
+    # This part might work but it is very slow!!!
+    # Until here we create the matrix and substract the mean of rows
+    
+    # matrix_users_similarity = np.zeros((users.shape[0]+1,users.shape[0]+1))
+    # for i in range(1, users.shape[0]):
+    #     for j in range(1, users.shape[0]):
+    #         if(i != j):
+    #             sum = 0
+    #             sumi = 0
+    #             sumj = 0
+    #             for k in range(1, matrix_ratings.shape[1]):
+    #                 if(matrix_ratings[i][k] != 0 and matrix_ratings[j][k] != 0):
+    #                     sum = sum + (matrix_ratings[i][k]*matrix_ratings[j][k])
+    #                     sumi = sumi + matrix_ratings[i][k] * matrix_ratings[i][k]
+    #                     sumj = sumj + matrix_ratings[j][k] * matrix_ratings[j][k]
+    #             sumi = np.sqrt(sumi)
+    #             sumj = np.sqrt(sumj)
+    #             sum = sum / (sumi * sumj)
+    #             matrix_users_similarity[i][j] = sum
+
+    # print(matrix_users_similarity) 
+                
+    print(matrix_ratings)
 
 
 
