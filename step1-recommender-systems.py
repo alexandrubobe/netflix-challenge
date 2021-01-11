@@ -37,7 +37,12 @@ predictions_description = pd.read_csv(predictions_file, delimiter=';', names=['u
 #####
 
 def predict_collaborative_filtering(movies, users, ratings, predictions):
-    pass
+    matrix_ratings  = np.zeros((users.shape[0]+1, movies.shape[0]+1))
+    for index, row in ratings.iterrows():
+        matrix_ratings[row['userID'], row['movieID']] =  row["rating"]
+    #matrix_ratings.replace(0,NaN)
+    #pd.DataFrame(matrix_ratings).to_csv("./data/matrix.csv", header=None, index =None)
+    matrix_users_similarity = np.zeros((users.shape[0]+1,users.shape[0]+1))
 
 
 
