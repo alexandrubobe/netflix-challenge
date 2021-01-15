@@ -39,55 +39,88 @@ predictions_description = pd.read_csv(predictions_file, delimiter=';', names=['u
 def predict_collaborative_filtering(movies, users, ratings, predictions):
     
     
+       
+    
     # example = np.zeros((4,7))
     # example[0] = [4,0,0,5,1,0,0]
     # example[1] = [4,5,4,0,0,0,0]
     # example[2] = [0,0,0,2,4,5,0]
     # example[3] = [0,3,0,0,0,0,4]
     
+    # ex1 = np.zeros((4,7))
+    # ex1[0] = [4,0,0,5,1,0,0]
+    # ex1[1] = [4,5,4,0,0,0,0]
+    # ex1[2] = [0,0,0,2,4,5,0]
+    # ex1[3] = [0,3,0,0,0,0,4]
     # average = np.true_divide(example.sum(1),(example != 0).sum(1))
     # for i in range(0,example.shape[0]):
     #     example[i,np.nonzero(example[i])] -= average[i]
         
     # pear = np.corrcoef(example)
-    # print(pear)
+    # matrix_ex_pred = np.zeros((4,7))
+    
+    # for i in range(0,pear.shape[0]):
+    #     sorted = np.argsort(-pear[i])
+    #     for j in range(0, ex1.shape[1]):
+    #         if(ex1[i][j] == 0):
+    #             k = 1
+    #             sum_ratings = 0
+    #             for l in range(0,sorted.shape[0]):
+    #                 if(k == 0):
+    #                     break
+    #                 if(ex1[sorted[l]][j] != 0):
+    #                     k = k - 1
+    #                     sum_ratings = sum_ratings + ex1[sorted[l]][j]
+    #             matrix_ex_pred[i][j] = sum_ratings
+    #         else:
+    #             matrix_ex_pred[i][j] = ex1[i][j]
+    
+    # print(matrix_ex_pred)
+
                     
-    # np.savetxt("example.csv", example, delimiter=";")
-    # example_pearson = np.corrcoef(example_description)
+    #np.savetxt("example.csv", example, delimiter=";")
+    #example_pearson = np.corrcoef(example_description)
     
     
     
-    matrix_ratings = np.zeros((users.shape[0]+1, movies.shape[0]+1))
-    matrix_predictions = np.zeros((users.shape[0]+1, movies.shape[0]+1))
+    # matrix_ratings = np.zeros((users.shape[0]+1, movies.shape[0]+1))
+    # matrix_predictions = np.zeros((users.shape[0]+1, movies.shape[0]+1))
     
-    for index, row in ratings.iterrows():
-        matrix_ratings[row['userID'], row['movieID']] =  row["rating"]
+    # for index, row in ratings.iterrows():
+    #     matrix_ratings[row['userID'], row['movieID']] =  row["rating"]
+    #     matrix_predictions[row['userID'], row['movieID']] =  row["rating"]
     
-    average = np.true_divide(matrix_ratings.sum(1),(matrix_ratings != 0).sum(1))
-    for i in range(0,matrix_ratings.shape[0]):
-         matrix_ratings[i,np.nonzero(matrix_ratings[i])] -= average[i]
+    # average = np.true_divide(matrix_ratings.sum(1),(matrix_ratings != 0).sum(1))
+    # for i in range(0,matrix_ratings.shape[0]):
+    #      matrix_ratings[i,np.nonzero(matrix_ratings[i])] -= average[i]
 
     #matrix_pearson = np.corrcoef(matrix_ratings)
     #np.savetxt("pearson.csv", matrix_pearson, delimiter=";")   
     
-    for i in range(1,users.shape[0]):
-        sorted = np.argsort(-pearson_description[i])
-        for j in range(1, movies.shape[0]):
-            if(matrix_ratings[i][j] == 0):
-                k = 3
-                sum_ratings = 0
-                for l in range(1,sorted.shape[0]):
-                    if(k == 0):
-                        break
-                    if(matrix_ratings[sorted[l]][j] != 0):
-                        k = k - 1
-                        sum_ratings = sum_ratings + matrix_ratings[sorted[l]][j]
-                matrix_predictions = sum_ratings / 3
-            else:
-                matrix_predictions = matrix_ratings[i][j]
+    # for i in range(1,matrix_ratings.shape[0]):
+    #     sorted = np.argsort(-pearson_description[i])
+    #     for j in range(1, matrix_ratings.shape[1]):
+    #         if(matrix_ratings[i][j] == 0):
+    #             k = 3
+    #             sum_ratings = 0
+    #             for l in range(0,sorted.shape[0]):
+    #                 if(k == 0):
+    #                     break
+    #                 if(matrix_predictions[sorted[l]][j] != 0):
+    #                     k = k - 1
+    #                     sum_ratings = sum_ratings + matrix_predictions[sorted[l]][j]
+    #             matrix_predictions[i][j] = sum_ratings / 3
     
-    np.savetxt("predict.csv", matrix_predictions, delimiter=";")
+    # np.savetxt("predict.csv", matrix_predictions, delimiter=";")
+    result = np.zeros((predictions.shape[0],2))
+    print(predict_description.shape[0],predict_description.shape[1])
+    for i,row in predictions.iterrows():
+        if(row[0] == 5298):
+            result[i] = [i,3]
+        else:
+            result[i] = [i,predict_description[row[0]][row[1]]]
 
+    np.savetxt("submission.csv", result, delimiter=",")
 
 
 
