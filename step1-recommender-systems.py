@@ -22,6 +22,9 @@ users_file = './data/users.csv'
 ratings_file = './data/ratings.csv'
 predictions_file = './data/predictions.csv'
 submission_file = './data/submission.csv'
+#example_file = './example.csv'
+pearson_file = './pearson.csv'
+predict = './predict.csv'
 
 
 # Read the data using pandas
@@ -29,17 +32,18 @@ movies_description = pd.read_csv(movies_file, delimiter=';', dtype={'movieID':'i
 users_description = pd.read_csv(users_file, delimiter=';', dtype={'userID':'int', 'gender':'str', 'age':'int', 'profession':'int'}, names=['userID', 'gender', 'age', 'profession'])
 ratings_description = pd.read_csv(ratings_file, delimiter=';', dtype={'userID':'int', 'movieID':'int', 'rating':'int'}, names=['userID', 'movieID', 'rating'])
 predictions_description = pd.read_csv(predictions_file, delimiter=';', names=['userID', 'movieID'], header=None)
-
+pearson_description = pd.read_csv(pearson_file,delimiter=';',header=None)
+predict_description = pd.read_csv(predict, delimiter =';',header = None )
+#example_description = pd.read_csv(example_file,delimiter=';', header=None)
 #####
 ##
 ## COLLABORATIVE FILTERING
 ##
 #####
 
+    
 def predict_collaborative_filtering(movies, users, ratings, predictions):
     
-    
-       
     
     # example = np.zeros((4,7))
     # example[0] = [4,0,0,5,1,0,0]
@@ -112,11 +116,25 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
     #             matrix_predictions[i][j] = sum_ratings / 3
     
     # np.savetxt("predict.csv", matrix_predictions, delimiter=";")
+
+
     result = np.zeros((predictions.shape[0],2))
     for i,row in predictions.iterrows():
-        result[i] = [i,predict_description.at[row[0],row[1]]]
+        result[i] = [i+1,round(predict_description.at[row[0],row[1]])]
 
-    result
+    return result.astype(int)
+
+
+    
+
+
+
+
+
+
+
+
+    
 
 
 
@@ -164,14 +182,14 @@ def predict_random(movies, users, ratings, predictions):
 #####    
 
 ## //!!\\ TO CHANGE by your prediction function
-predictions = predict_random(movies_description, users_description, ratings_description, predictions_description)
+predictions = predict_collaborative_filtering(movies_description, users_description, ratings_description, predictions_description)
 
 #Save predictions, should be in the form 'list of tuples' or 'list of lists'
 with open(submission_file, 'w') as submission_writer:
-    #Formates data
-    predictions = [map(str, row) for row in predictions]
-    predictions = [','.join(row) for row in predictions]
-    predictions = 'Id,Rating\n'+'\n'.join(predictions)
+   #Formates data
+   predictions = [map(str, row) for row in predictions]
+   predictions = [','.join(row) for row in predictions]
+   predictions = 'Id,Rating\n'+'\n'.join(predictions)
     
     #Writes it dowmn
-    submission_writer.write(predictions)
+   submission_writer.write(predictions)
