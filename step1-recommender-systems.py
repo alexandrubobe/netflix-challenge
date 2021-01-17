@@ -113,14 +113,10 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
     
     # np.savetxt("predict.csv", matrix_predictions, delimiter=";")
     result = np.zeros((predictions.shape[0],2))
-    print(predict_description.shape[0],predict_description.shape[1])
     for i,row in predictions.iterrows():
-        if(row[0] == 5298):
-            result[i] = [i,3]
-        else:
-            result[i] = [i,predict_description[row[0]][row[1]]]
+        result[i] = [i,predict_description.at[row[0],row[1]]]
 
-    np.savetxt("submission.csv", result, delimiter=",")
+    result
 
 
 
