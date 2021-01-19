@@ -283,26 +283,59 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
     # return result
 
 
-    
-
-
-
-    
-
-
-
-
-
-
-
-
-    
-
-
 
 #####
 ##
 ## LATENT FACTORS
+def predict_latent_factors(movies, users, ratings, predictions):
+# Utility matrix 
+    matrix_ratings = np.zeros((users.shape[0]+1, movies.shape[0]+1))
+    matrix = np.zeros((users.shape[0]+1, movies.shape[0]+1))
+    
+    for index, row in ratings.iterrows():
+        matrix_ratings[row['userID'], row['movieID']] =  row['rating'] 
+        matrix[row['userID'], row['movieID']] =  row['rating']
+    
+    #normalise by user
+    average = np.true_divide(matrix_ratings.sum(1),(matrix_ratings != 0).sum(1))
+    for i in range(0,matrix_ratings.shape[0]):
+         matrix_ratings[i,np.nonzero(matrix_ratings[i])] -= average[i]
+
+
+    # Q first, then P = s * vh
+    Q, s, P2 = np.linalg.svd(matrix_ratings)
+    Q = Q[:, :40]
+    s = s[:40]
+    P1 = np.diag(s)
+    #cut the P1 and P2
+    P2 = P2[:40]
+
+    P = np.matmul(P1, P2)
+
+    for a in range(10):
+        for x in range(1, matrix_ratings.shape[0]):
+            for i in range(1, matrix_ratings.shape[1]):
+                if matrix_ratings[x, i] != 0: 
+                    errors =  2 * (matrix_ratings[x, i] - np.dot(Q[x, :], P[:, i]))
+                    Q[x, :] = Q[x, :] + 0.0001 * (errors * P[:, i] - 0.7 * Q[x, :])
+                    P[:, i] = P[:, i] + 0.0001 * (errors * Q[x, :] - 0.7 * P[:, i])
+
+    #matrix for predictions
+    res = []
+
+    for index, row in predictions.iterrows():
+        val = np.dot(Q[row[0]], P[:, row[1]])
+        avg = np.sum(matrix[row[0]])/np.count_nonzero(matrix[row[0]])
+        val += avg
+        if val < 1:
+            val = 1
+        elif val > 5:
+            val = 5
+        res.append([index+1, val])
+    print(len(res))
+    return res
+    
+
 ##
 #####
     
