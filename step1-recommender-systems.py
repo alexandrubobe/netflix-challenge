@@ -41,12 +41,11 @@ predict_description = pd.read_csv(predict, delimiter =';',header = None )
 ##
 #####
 def cosine_similarity(matrix):
-    sim_index = []
-    for row1 in matrix:
-        for row2 in matrix:
-            sim_index.append(sum(row1*row2)/np.sqrt(sum(row1**2) * sum(row2**2)))
-    return np.array(sim_index).reshape((matrix.shape[0],matrix.shape[0]))
-
+    sim_index = np.zeros((matrix.shape[0],matrix.shape[0]))
+    for i in range(0,matrix.shape[0]):
+        for j in range(0,matrix.shape[0]):
+            sim_index[i][j] = np.dot(matrix[i],matrix[j]) / (np.linalg.norm(matrix[i]) * np.linalg.norm(matrix[j]))
+    return sim_index
 
 def first_collaborative_filtering(movies, users, ratings, predictions):
     matrix_ratings = np.zeros((users.shape[0]+1, movies.shape[0]+1))
@@ -211,7 +210,7 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
     
     # 
    
-    
+    #user - user
     # result = []
     # sorted = np.argsort(-pearson_description)
     # for index in range(0, predictions.shape[0]):
@@ -244,8 +243,48 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
     #             else:
     #                 result.append([index+1,average[user]])
             
+    # return result
+    
+    ###NU MERGE!!!
+    # matrix_ratings = matrix_ratings.transpose()
+    #item - item
+    # result = []
+    # sorted = np.argsort(-cosine_description)
+    # for index in range(0, predictions.shape[0]):
+    #     user = predictions.at[index,'userID']
+    #     movie = predictions.at[index,'movieID']
+    #     if(matrix_ratings[movie][user] != 0):
+    #         result.append([index+1, matrix_ratings[movie][user]])
+    #     else:
+    #         sum = 0
+    #         len = 0
+    #         k = 15
+    #         for j in sorted[movie]:
+    #             if(k == 0):
+    #                 break
+    #             if(matrix_ratings[sorted[movie][j]][user] != 0):
+    #                 sum += cosine_description.at[movie,sorted[movie][j]] * matrix_ratings[sorted[movie][j]][user]
+    #                 len += np.abs(cosine_description.at[movie,sorted[movie][j]])
+    #                 k -= 1
+    #         if(len != 0):
+    #             if(np.isnan(average[movie] + sum/len)):
+    #                 if(np.isnan(average[movie])):
+    #                     result.append([index+1,3])
+    #                 else:
+    #                     result.append([index+1,average[movie]])
+    #             else:    
+    #                 result.append([index+1,average[movie] + sum/len])
+    #         if(len == 0):
+    #             if(np.isnan(average[movie])):
+    #                 result.append([index+1,3])
+    #             else:
+    #                 result.append([index+1,average[movie]]) 
 
     # return result
+
+
+    
+
 
 
     
