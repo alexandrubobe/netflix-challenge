@@ -160,7 +160,9 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
         matrix_ratings[ row['movieID'], row['userID']] =  row["rating"]
     
     average = np.true_divide(matrix_ratings.sum(1),(matrix_ratings != 0).sum(1))
+    mean = np.mean(average)
 
+    average_user =np.true_divide(matrix_ratings.sum(0),(matrix_ratings != 0).sum(0))
 
     matrix_cosine = cosine_similarity(matrix_ratings)
     np.savetxt("cosine.csv", matrix_cosine, delimiter=";")
@@ -180,7 +182,7 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
                 if(k == 0):
                     break
                 if(matrix_ratings[sorted[movie][j]][user] != 0):
-                    sum += cosine_description.at[movie,sorted[movie][j]] * matrix_ratings[sorted[movie][j]][user]
+                    sum += cosine_description.at[movie,sorted[movie][j]] * (matrix_ratings[sorted[movie][j]][user] - mean - (average[j] - mean) - (average_user[user] - mean))
                     len += cosine_description.at[movie,sorted[movie][j]]
                     k -= 1
             if(len != 0):
@@ -190,7 +192,7 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
                     else:
                         result.append([index+1,average[movie]])
                 else:    
-                    result.append([index+1, sum/len])
+                    result.append([index+1,mean + (average[movie] - mean) + (average_user[user] - mean) + sum/len])
             if(len == 0):
                 if(np.isnan(average[movie])):
                     result.append([index+1,3])
@@ -199,7 +201,6 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
 
 
     return result
-
 
 
 #####
