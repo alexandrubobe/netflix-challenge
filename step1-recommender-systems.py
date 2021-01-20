@@ -97,74 +97,7 @@ def first_collaborative_filtering(movies, users, ratings, predictions):
 
 
 def predict_collaborative_filtering(movies, users, ratings, predictions):
-    
-    
-    # example = np.zeros((4,7))
-    # example[0] = [4,0,0,5,1,0,0]
-    # example[1] = [4,5,4,0,0,0,0]
-    # example[2] = [0,0,0,2,4,5,0]
-    # example[3] = [0,3,0,0,0,0,4]
-    
-    # ex_pre = np.zeros((3,2))
-    # ex_pre[0] = [1,3]
-    # ex_pre[1] = [2,2]
-    # ex_pre[2] = [3,3]
-    # average = np.true_divide(example.sum(1),(example != 0).sum(1))
-    # for i in range(0,example.shape[0]):
-    #     example[i,np.nonzero(example[i])] -= average[i]
-        
-    # pear = np.corrcoef(example)
-    # matrix_ex_pred = np.zeros((4,7))
-
-    # ex_result =[]
-    # sorted = np.argsort(-pear, axis=1)
-    # for index in range(0,ex_pre.shape[0]):
-    #     user = int(ex_pre[index][0])
-    #     movie = int(ex_pre[index][1])
-    #     if(example[user][movie]!=0):
-    #         ex_result.append([index+1,example[user][movie]])
-    #     else:
-    #         sum = 0
-    #         len = 0
-    #         k = 2
-    #         for j in sorted[user]:
-    #             if(k == 0):
-    #                 break
-    #             print(example[user][sorted[user][j]])
-    #             if(example[user][sorted[user][j]] != 0):
-    #                 sum += abs(pear[user][j] * example[user][sorted[user][j]])
-    #                 len += abs(pear[user][j])
-    #                 k -= 1
-           
-    #         if(len != 0):
-    #             ex_result.append([index+1,sum/len])
-    #         if(len == 0):
-    #             ex_result.append([index+1,3])
-            
-    # print(ex_result)
-
-
-    # for i in range(0,pear.shape[0]):
-    #     sorted = np.argsort(-pear[i])
-    #     for j in range(0, ex1.shape[1]):
-    #         if(ex1[i][j] == 0):
-    #             k = 1
-    #             sum_ratings = 0
-    #             for l in range(0,sorted.shape[0]):
-    #                 if(k == 0):
-    #                     break
-    #                 if(ex1[sorted[l]][j] != 0):
-    #                     k = k - 1
-    #                     sum_ratings = sum_ratings + ex1[sorted[l]][j]
-    #             matrix_ex_pred[i][j] = sum_ratings
-    #         else:
-    #             matrix_ex_pred[i][j] = ex1[i][j]
-    
-    # print(matrix_ex_pred)                
-    #np.savetxt("example.csv", example, delimiter=";")
-    #example_pearson = np.corrcoef(example_description)
-    
-    
+     
     
     matrix_ratings = np.zeros((users.shape[0]+1, movies.shape[0]+1))
     
@@ -182,33 +115,7 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
     
     #matrix_pearson = np.corrcoef(matrix_ratings)
     #np.savetxt("pearson.csv", matrix_pearson, delimiter=";")   
-    
-    # ex_result =[]
-    # sorted = np.argsort(-pear, axis=1)
-    # for index in range(0,ex_pre.shape[0]):
-    #     user = int(ex_pre[index][0])
-    #     movie = int(ex_pre[index][1])
-    #     if(example[user][movie]!=0):
-    #         ex_result.append([index+1,example[user][movie]])
-    #     else:
-    #         sum = 0
-    #         len = 0
-    #         k = 2
-    #         for j in sorted[user]:
-    #             if(k == 0):
-    #                 break
-    #             print(example[user][sorted[user][j]])
-    #             if(example[user][sorted[user][j]] != 0):
-    #                 sum += abs(pear[user][j] * example[user][sorted[user][j]])
-    #                 len += abs(pear[user][j])
-    #                 k -= 1
-           
-    #         if(len != 0):
-    #             ex_result.append([index+1,sum/len])
-    #         if(len == 0):
-    #             ex_result.append([index+1,3])
-    
-    # 
+     
    
     #user - user
     # result = []
@@ -245,42 +152,53 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
             
     # return result
     
-    ###NU MERGE!!!
-    # matrix_ratings = matrix_ratings.transpose()
-    #item - item
-    # result = []
-    # sorted = np.argsort(-cosine_description)
-    # for index in range(0, predictions.shape[0]):
-    #     user = predictions.at[index,'userID']
-    #     movie = predictions.at[index,'movieID']
-    #     if(matrix_ratings[movie][user] != 0):
-    #         result.append([index+1, matrix_ratings[movie][user]])
-    #     else:
-    #         sum = 0
-    #         len = 0
-    #         k = 15
-    #         for j in sorted[movie]:
-    #             if(k == 0):
-    #                 break
-    #             if(matrix_ratings[sorted[movie][j]][user] != 0):
-    #                 sum += cosine_description.at[movie,sorted[movie][j]] * matrix_ratings[sorted[movie][j]][user]
-    #                 len += np.abs(cosine_description.at[movie,sorted[movie][j]])
-    #                 k -= 1
-    #         if(len != 0):
-    #             if(np.isnan(average[movie] + sum/len)):
-    #                 if(np.isnan(average[movie])):
-    #                     result.append([index+1,3])
-    #                 else:
-    #                     result.append([index+1,average[movie]])
-    #             else:    
-    #                 result.append([index+1,average[movie] + sum/len])
-    #         if(len == 0):
-    #             if(np.isnan(average[movie])):
-    #                 result.append([index+1,3])
-    #             else:
-    #                 result.append([index+1,average[movie]]) 
 
-    # return result
+    def predict_item_item_collaborative_filtering(movies, users, ratings, predictions):
+    
+    matrix_ratings = np.zeros((movies.shape[0]+1, users.shape[0]+1))
+    for index, row in ratings.iterrows():
+        matrix_ratings[ row['movieID'], row['userID']] =  row["rating"]
+    
+    average = np.true_divide(matrix_ratings.sum(1),(matrix_ratings != 0).sum(1))
+
+
+    matrix_cosine = cosine_similarity(matrix_ratings)
+    np.savetxt("cosine.csv", matrix_cosine, delimiter=";")
+    
+    result = []
+    sorted = np.argsort(-cosine_description)
+    for index in range(0, predictions.shape[0]):
+        user = predictions.at[index,'userID']
+        movie = predictions.at[index,'movieID']
+        if(matrix_ratings[movie][user] != 0):
+            result.append([index+1, matrix_ratings[movie][user]])
+        else:
+            sum = 0
+            len = 0
+            k = 15
+            for j in sorted[movie]:
+                if(k == 0):
+                    break
+                if(matrix_ratings[sorted[movie][j]][user] != 0):
+                    sum += cosine_description.at[movie,sorted[movie][j]] * matrix_ratings[sorted[movie][j]][user]
+                    len += cosine_description.at[movie,sorted[movie][j]]
+                    k -= 1
+            if(len != 0):
+                if(np.isnan(sum/len)):
+                    if(np.isnan(average[movie])):
+                        result.append([index+1,3])
+                    else:
+                        result.append([index+1,average[movie]])
+                else:    
+                    result.append([index+1, sum/len])
+            if(len == 0):
+                if(np.isnan(average[movie])):
+                    result.append([index+1,3])
+                else:
+                    result.append([index+1,average[movie]]) 
+
+
+    return result
 
 
 
