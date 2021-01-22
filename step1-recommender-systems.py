@@ -202,6 +202,17 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
 
     return result
 
+def cosine_similarity_item(matrix):
+    sim_index = np.zeros((matrix.shape[0],matrix.shape[0]))
+    for i in range(0,matrix.shape[0]):
+        print(i)
+        for j in range(0,matrix.shape[0]):
+            if np.linalg.norm(matrix[i]) * np.linalg.norm(matrix[j]) == 0:
+                sim_index[i][j] = 0
+            else:
+                sim_index[i][j] = np.dot(matrix[i],matrix[j]) / (np.linalg.norm(matrix[i]) * np.linalg.norm(matrix[j]))
+    return sim_index
+
 def predict_item(movies, users, ratings, predictions):
     predMatrix = np.array(predictions)
     matrix_ratings = np.zeros((movies.shape[0], users.shape[0]))
@@ -215,7 +226,7 @@ def predict_item(movies, users, ratings, predictions):
     for i in range(0,matrix_ratings.shape[0]):
          matrix_ratings[i,np.nonzero(matrix_ratings[i])] -= average[i]
 
-    sim = cosine_similarity(matrix_ratings)
+    sim = cosine_similarity_item(matrix_ratings)
 
     index = 1
     for i in predMatrix:
