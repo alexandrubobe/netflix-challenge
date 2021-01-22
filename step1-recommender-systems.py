@@ -202,6 +202,47 @@ def predict_collaborative_filtering(movies, users, ratings, predictions):
 
     return result
 
+def predict_item(movies, users, ratings, predictions):
+    predMatrix = np.array(predictions)
+    matrix_ratings = np.zeros((movies.shape[0], users.shape[0]))
+    matrix_predictions = []
+
+    for index, row in ratings.iterrows():
+        matrix_ratings[ row['movieID']-1, row['userID']-1] =  row["rating"]
+    
+    #normalise by movie
+    average = np.true_divide(matrix_ratings.sum(1),(matrix_ratings != 0).sum(1))
+    for i in range(0,matrix_ratings.shape[0]):
+         matrix_ratings[i,np.nonzero(matrix_ratings[i])] -= average[i]
+
+    sim = cosine_similarity(matrix_ratings)
+
+    index = 1
+    for i in predMatrix:
+        print(index)
+        res = []
+        similarItems = np.argsort(-(sim[i[1]-1]))
+        for simItem in similarItems:
+            if len(res)== 10:
+                break
+            if matrix_ratings[simItem, i[0]-1] != 0:
+                res.append((simItem))
+        sum = 0
+        sum1 = 0
+        for k in res:
+            sum += sim[i[1]-1, k] * matrix_ratings[k, i[0]-1]
+            sum1 += sim[i[1]-1, k]
+        if sum1 == 0:
+            val = matrix_ratings[np.nonzero(matrix_ratings)].mean()
+        else:
+            val = sum/sum1+average[i[1]-1]
+        if val < 1:
+            val = 1
+        elif val > 5:
+            val = 5
+        matrix_predictions.append((index, val))
+        index += 1
+    return matrix_predictions
 
 #####
 ##
